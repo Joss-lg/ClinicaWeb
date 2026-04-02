@@ -1,0 +1,71 @@
+---
+// src/components/Cirugias.astro
+const procedimientos = [
+  { cod: '01', nombre: 'Cirugía General', desc: 'Procedimientos de baja y alta complejidad con técnicas mínimamente invasivas.' },
+  { cod: '02', nombre: 'Traumatología', desc: 'Intervenciones ortopédicas y corrección de lesiones del sistema motor.' },
+  { cod: '03', nombre: 'Neurocirugía', desc: 'Microcirugía avanzada para patologías del sistema nervioso central.' },
+  { cod: '04', nombre: 'Plástica y Reconstructiva', desc: 'Resultados funcionales y estéticos con estándares internacionales.' }
+];
+---
+
+<section class="py-24 bg-[#1a365d] text-white">
+  <div class="max-w-7xl mx-auto px-6">
+    
+    <div class="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
+      <div class="max-w-2xl">
+        <span class="text-accent font-bold tracking-[0.4em] uppercase text-xs mb-4 block">Infraestructura de Vanguardia</span>
+        <h2 class="text-5xl font-bold leading-tight">
+          Quirófanos <span class="font-light italic text-slate-300">Inteligentes</span> y Seguridad Quirúrgica
+        </h2>
+      </div>
+      <div class="hidden lg:block">
+        <p class="text-slate-400 max-w-xs text-sm border-l border-slate-700 pl-6 italic">
+          Contamos con protocolos internacionales de seguridad al paciente (Checklist OMS) y flujo laminar de aire.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-12 items-start">
+      
+      <div class="space-y-1">
+        {procedimientos.map((proc) => (
+          <div class="group border-b border-white/10 py-8 hover:bg-white/5 transition-colors px-4 cursor-pointer">
+            <div class="flex items-start gap-8">
+              <span class="text-accent font-mono text-lg opacity-50 group-hover:opacity-100">{proc.cod}</span>
+              <div>
+                <h3 class="text-2xl font-bold mb-2 group-hover:text-accent transition-colors">{proc.nombre}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed max-w-md">{proc.desc}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="relative sticky top-24">
+        <div class="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-black/50">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1a365d] via-transparent to-transparent z-10"></div>
+          <img 
+            src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=1200" 
+            alt="Quirófano de Alta Tecnología" 
+            class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
+          />
+        </div>
+
+        <div class="absolute bottom-10 left-10 right-10 bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-2xl z-20">
+          <div class="flex items-center gap-6">
+            <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04a11.357 11.357 0 00-1.173 4.593a11.71 11.71 0 006.192 10.332a11.647 11.647 0 001.2 1.34c.04.04.084.08.128.119l.117.104l.118-.104c.044-.039.088-.08.128-.119a11.66 11.66 0 001.2-1.34a11.711 11.711 0 006.192-10.332a11.357 11.357 0 00-1.173-4.593z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-bold uppercase tracking-widest text-accent">Área Estéril Certificada</p>
+              <p class="text-xs text-slate-300">Monitoreo constante de parámetros vitales y anestesia segura.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Urologia from '../components/Urologia.astro';
+import Cardiologia from '../components/Cardiologia.astro';
+import Cirugias from '../components/Cirugias.astro';
+import Hero from '../components/Hero.astro';
+
+---
+
+<Layout title="Clínica Privada | Especialidades Médicas">
+	<Navbar />
+	<main>
+		<Hero />
+		<Urologia />
+		<Cardiologia />
+		<Cirugias />
+
+	</main>
+	
+</Layout>

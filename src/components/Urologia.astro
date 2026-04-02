@@ -1,0 +1,60 @@
+---
+// src/components/Urologia.astro
+---
+<section class="py-20 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      
+      <div class="relative group">
+        <div class="absolute -inset-4 bg-primary/5 rounded-2xl scale-95 group-hover:scale-100 transition-transform duration-500"></div>
+        <div class="relative overflow-hidden rounded-xl shadow-2xl shadow-primary/10">
+          <img 
+            src="https://images.unsplash.com/photo-1579152276502-545a24b88c01?auto=format&fit=crop&q=80&w=1200" 
+            alt="Especialidad Urología" 
+            class="w-full h-[450px] object-cover"
+          />
+        </div>
+        <div class="absolute top-6 right-6 bg-white/90 backdrop-blur px-4 py-2 rounded-lg border border-slate-100 shadow-sm">
+          <p class="text-[10px] uppercase tracking-widest font-bold text-primary">Tecnología Láser</p>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-4xl font-bold text-primary mb-6 leading-tight">
+          Unidad de <span class="text-accent font-light italic">Urología Avanzada</span>
+        </h2>
+        <p class="text-lg text-secondary mb-8 leading-relaxed">
+          Ofrecemos soluciones integrales para la salud del sistema urinario y reproductor masculino, utilizando técnicas mínimamente invasivas y diagnósticos de alta precisión.
+        </p>
+
+        <ul class="space-y-4 mb-10">
+          {[
+            'Cirugía Robótica y Laparoscópica',
+            'Tratamiento Láser para Próstata',
+            'Cálculos Renales (Litiasis)',
+            'Urología Oncológica de Alta Complejidad'
+          ].map((servicio) => (
+            <li class="flex items-center gap-3 text-slate-700 font-medium">
+              <span class="w-2 h-2 bg-accent rounded-full"></span>
+              {servicio}
+            </li>
+          ))}
+        </ul>
+
+        <div class="flex items-center gap-6">
+          <a 
+            href="#contacto" 
+            class="px-8 py-4 bg-primary text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all"
+          >
+            Consultar Especialista
+          </a>
+          <div class="flex flex-col">
+            <span class="text-xs text-slate-400 uppercase font-bold tracking-tighter">Atención Inmediata</span>
+            <span class="text-primary font-bold">55 1234 5678</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
