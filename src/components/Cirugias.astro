@@ -1,71 +1,175 @@
 ---
 // src/components/Cirugias.astro
 const procedimientos = [
-  { cod: '01', nombre: 'Cirugía General', desc: 'Procedimientos de baja y alta complejidad con técnicas mínimamente invasivas.' },
-  { cod: '02', nombre: 'Traumatología', desc: 'Intervenciones ortopédicas y corrección de lesiones del sistema motor.' },
-  { cod: '03', nombre: 'Neurocirugía', desc: 'Microcirugía avanzada para patologías del sistema nervioso central.' },
-  { cod: '04', nombre: 'Plástica y Reconstructiva', desc: 'Resultados funcionales y estéticos con estándares internacionales.' }
+  {
+    id: "gen",
+    nombre: "Cirugía General",
+    detalle: "Intervenciones abdominales y digestivas con técnicas de mínima invasión.",
+    tipo: "Laparoscópica",
+    imagen: "cirugiageneral.webp",
+    servicios: [
+      { t: "Vesícula biliar", d: "Extirpación segura mediante micro-incisiones." },
+      { t: "Reparación de hernias", d: "Refuerzo avanzado con mallas de alta resistencia." },
+      { t: "Cirugía de colon", d: "Tratamientos oncológicos y funcionales especializados." },
+      { t: "Apendicectomía", d: "Intervención de urgencia con recuperación acelerada." }
+    ]
+  },
+  {
+    id: "trau",
+    nombre: "Traumatología",
+    detalle: "Reparación de fracturas y reemplazos articulares de alta precisión.",
+    tipo: "Alta Complejidad",
+    imagen: "traumato.webp",
+    servicios: [
+      { t: "Reemplazo de cadera", d: "Prótesis de última generación con larga vida útil." },
+      { t: "Artroscopia de rodilla", d: "Reparación de ligamentos mediante técnica cerrada." },
+      { t: "Cirugía de columna", d: "Correcciones estructurales de mínima invasión." },
+      { t: "Medicina deportiva", d: "Protocolos avanzados para el retorno a la actividad." }
+    ]
+  },
+  {
+    id: "est",
+    nombre: "Cirugía Estética",
+    detalle: "Procedimientos reconstructivos y estéticos realizados por expertos certificados.",
+    tipo: "Plástica",
+    imagen: "cirugiaestetica.webp",
+    servicios: [
+      { t: "Rinoplastia", d: "Mejora estética y funcional del tabique nasal." },
+      { t: "Reconstrucción post-trauma", d: "Restauración de tejidos y simetría corporal." },
+      { t: "Lipoescultura HD", d: "Definición de contorno corporal con tecnología avanzada." },
+      { t: "Mamoplastia", d: "Aumento, reducción o elevación con resultados naturales." }
+    ]
+  },
+  {
+    id: "neuro",
+    nombre: "Neurocirugía",
+    detalle: "Microcirugía avanzada para patologías del sistema nervioso y columna.",
+    tipo: "Microcirugía",
+    imagen: "neurocirugia.webp",
+    servicios: [
+      { t: "Tumores cerebrales", d: "Resección guiada por neuronavegación robótica." },
+      { t: "Aneurismas", d: "Clipaje y exclusión de malformaciones vasculares." },
+      { t: "Nervio periférico", d: "Liberación y reconstrucción de conductos nerviosos." },
+      { t: "Microdiscectomía", d: "Tratamiento de hernias discales con micro-óptica." }
+    ]
+  }
 ];
 ---
 
-<section class="py-24 bg-[#1a365d] text-white">
-  <div class="max-w-7xl mx-auto px-6">
-    
-    <div class="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
-      <div class="max-w-2xl">
-        <span class="text-accent font-bold tracking-[0.4em] uppercase text-xs mb-4 block">Infraestructura de Vanguardia</span>
-        <h2 class="text-5xl font-bold leading-tight">
-          Quirófanos <span class="font-light italic text-slate-300">Inteligentes</span> y Seguridad Quirúrgica
-        </h2>
-      </div>
-      <div class="hidden lg:block">
-        <p class="text-slate-400 max-w-xs text-sm border-l border-slate-700 pl-6 italic">
-          Contamos con protocolos internacionales de seguridad al paciente (Checklist OMS) y flujo laminar de aire.
-        </p>
-      </div>
+<section id="cirugy-section" class="py-24  bg-transparent overflow-x-hidden">
+  <div class="container mx-auto px-6 max-w-7xl">
+    <div class="mb-16">
+      <span class="text-blue-600 font-bold tracking-[0.3em] uppercase text-xs">Excelencia Médica</span>
+      <h3 class="text-5xl md:text-6xl font-serif text-slate-950 mt-4 italic">Especialidades <span class="text-[#1d4680e3] not-italic font-sans font-black">Quirúrgicas</span></h3>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-12 items-start">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      {procedimientos.map((item) => (
+        <div class="group bg-slate-50 p-10 border-b-4 border-slate-200 hover:border-blue-600 transition-all duration-500 rounded-br-[4rem]">
+          <span class="text-blue-600 font-bold text-[10px] uppercase tracking-widest">{item.tipo}</span>
+          <h4 class="text-4xl font-serif text-slate-900 mt-6 mb-4 group-hover:text-blue-700 transition-colors">{item.nombre}</h4>
+          <p class="text-slate-500 leading-relaxed mb-10 text-lg font-light">{item.detalle}</p>
+          
+          <button 
+            class="open-modal flex items-center gap-4 text-slate-950 font-black uppercase text-xs tracking-widest hover:text-blue-600 transition-all cursor-pointer"
+            data-nombre={item.nombre}
+            data-imagen={item.imagen}
+            data-servicios={JSON.stringify(item.servicios)}
+          >
+            <span class="w-12 h-12 rounded-full border-2 border-slate-950 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-all transform duration-300 pointer-events-none">
+              +
+            </span>
+            Explorar Portafolio
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div id="modal-container" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[100] hidden items-center justify-center p-4 opacity-0 transition-all duration-500">
+    <div id="modal-content" class="bg-white rounded-[3rem] max-w-5xl w-full overflow-hidden shadow-2xl flex flex-col md:flex-row relative transform translate-y-10 transition-all duration-500">
       
-      <div class="space-y-1">
-        {procedimientos.map((proc) => (
-          <div class="group border-b border-white/10 py-8 hover:bg-white/5 transition-colors px-4 cursor-pointer">
-            <div class="flex items-start gap-8">
-              <span class="text-accent font-mono text-lg opacity-50 group-hover:opacity-100">{proc.cod}</span>
-              <div>
-                <h3 class="text-2xl font-bold mb-2 group-hover:text-accent transition-colors">{proc.nombre}</h3>
-                <p class="text-slate-400 text-sm leading-relaxed max-w-md">{proc.desc}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      <button id="close-modal" class="absolute top-6 right-6 z-20 bg-white/90 md:bg-slate-100 p-3 rounded-full text-slate-950 hover:bg-red-600 hover:text-white transition-all shadow-xl cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="md:w-1/2 h-56 md:h-auto relative overflow-hidden bg-slate-200">
+        <img id="modal-img" src="" alt="" class="w-full h-full object-cover scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/40 to-transparent"></div>
       </div>
 
-      <div class="relative sticky top-24">
-        <div class="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-black/50">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#1a365d] via-transparent to-transparent z-10"></div>
-          <img 
-            src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=1200" 
-            alt="Quirófano de Alta Tecnología" 
-            class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
-          />
-        </div>
-
-        <div class="absolute bottom-10 left-10 right-10 bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-2xl z-20">
-          <div class="flex items-center gap-6">
-            <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04a11.357 11.357 0 00-1.173 4.593a11.71 11.71 0 006.192 10.332a11.647 11.647 0 001.2 1.34c.04.04.084.08.128.119l.117.104l.118-.104c.044-.039.088-.08.128-.119a11.66 11.66 0 001.2-1.34a11.711 11.711 0 006.192-10.332a11.357 11.357 0 00-1.173-4.593z" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm font-bold uppercase tracking-widest text-accent">Área Estéril Certificada</p>
-              <p class="text-xs text-slate-300">Monitoreo constante de parámetros vitales y anestesia segura.</p>
-            </div>
+      <div class="md:w-1/2 p-8 md:p-16 bg-white overflow-y-auto max-h-[70vh] md:max-h-[90vh]">
+        <h5 id="modal-titulo" class="text-4xl font-black text-slate-950 leading-none mb-2"></h5>
+        <p class="text-blue-600 font-bold text-xs uppercase tracking-widest mb-8">Servicios Disponibles</p>
+        
+        <div id="modal-lista" class="space-y-6">
           </div>
-        </div>
       </div>
-
     </div>
   </div>
 </section>
+
+<script is:inline>
+  function setupModal() {
+    const buttons = document.querySelectorAll('.open-modal');
+    const modal = document.getElementById('modal-container');
+    const content = document.getElementById('modal-content');
+    const closeBtn = document.getElementById('close-modal');
+    const titulo = document.getElementById('modal-titulo');
+    const lista = document.getElementById('modal-lista');
+    const imagen = document.getElementById('modal-img');
+
+    if (!modal || !buttons.length) return;
+
+    buttons.forEach(btn => {
+      btn.onclick = () => {
+        const nombre = btn.getAttribute('data-nombre');
+        const imgUrl = btn.getAttribute('data-imagen');
+        const serviciosRaw = btn.getAttribute('data-servicios');
+        
+        try {
+          const servicios = JSON.parse(serviciosRaw);
+          if (titulo) titulo.textContent = nombre;
+          if (imagen) imagen.src = imgUrl;
+          if (lista) {
+            lista.innerHTML = servicios.map(s => `
+              <div class="border-l-2 border-blue-100 pl-6">
+                <h6 class="text-slate-900 font-black text-sm uppercase">${s.t}</h6>
+                <p class="text-slate-500 text-xs mt-1 font-light">${s.d}</p>
+              </div>
+            `).join('');
+          }
+
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+
+          setTimeout(() => {
+            modal.classList.add('opacity-100');
+            content.classList.remove('translate-y-10');
+            imagen.classList.remove('scale-110');
+          }, 50);
+        } catch (e) {
+          console.error("Error al leer servicios", e);
+        }
+      };
+    });
+
+    const hide = () => {
+      modal.classList.remove('opacity-100');
+      content.classList.add('translate-y-10');
+      document.body.style.overflow = 'auto';
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 400);
+    };
+
+    if (closeBtn) closeBtn.onclick = hide;
+    modal.onclick = (e) => { if (e.target === modal) hide(); };
+  }
+
+  setupModal();
+</script>

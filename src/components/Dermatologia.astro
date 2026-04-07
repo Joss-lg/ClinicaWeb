@@ -1,0 +1,109 @@
+---
+// Dermatología - Ahora abre el Modal del Navbar
+---
+
+<section id="dermatology-section" class="py-24  bg-transparent overflow-hidden relative opacity-0 translate-y-10 transition-all duration-1000 ease-out">
+  <div class="max-w-7xl mx-auto px-6 relative">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      
+      <div class="space-y-8">
+        <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-xs font-black uppercase tracking-widest">
+          Cuidado de la Piel
+        </div>
+        
+        <h2 class="text-5xl md:text-6xl font-black text-slate-900 leading-[1.1]">
+          Dermatología <br/> 
+          <span class="text-blue-600 italic font-light">Clínica y Estética</span>
+        </h2>
+
+        <p class="text-lg text-slate-600 leading-relaxed max-w-xl">
+          Protocolos de vanguardia para la salud y estética de tu piel. Desde diagnósticos complejos hasta rejuvenecimiento con tecnología láser de última generación.
+        </p>
+
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {['Acné Avanzado', 'Láser CO2', 'Peeling Químico', 'Mapeo de Lunares'].map((item) => (
+            <li class="flex items-center gap-2 font-bold text-slate-800 text-sm uppercase">
+              <span class="w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
+              {item}
+            </li>
+          ))}
+        </ul>
+
+        <div class="pt-6">
+        </div>
+      </div>
+
+      <div class="relative group flex justify-center">
+        <div class="absolute -top-10 -right-10 w-64 h-64 bg-blue-100 rounded-full blur-3xl opacity-50 group-hover:bg-blue-200 transition-colors duration-700"></div>
+        
+        <div class="relative z-10 w-full max-w-lg">
+          <div class="overflow-hidden rounded-[3.5rem] shadow-2xl border-8 border-white bg-slate-100">
+            <img 
+              src="dematologia.webp" 
+              alt="Especialista en Dermatología" 
+              class="w-full h-[550px] object-cover transform group-hover:scale-105 transition-transform duration-1000"
+            />
+          </div>
+
+          <div class="absolute -bottom-6 -left-8 bg-white p-5 rounded-2xl shadow-xl border border-slate-50 animate-bounce-slow">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-[10px] text-slate-400 font-black uppercase tracking-tighter leading-none mb-1">Certificación</p>
+                    <p class="text-blue-950 font-black text-lg leading-none italic text-nowrap">Skin Care 2026</p>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .reveal-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  @keyframes bounceSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .animate-bounce-slow {
+    animation: bounceSlow 3s infinite ease-in-out;
+  }
+</style>
+
+<script>
+  function initDermatologia() {
+    // 1. Lógica del Scroll Reveal
+    const section = document.querySelector('#dermatology-section');
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('reveal-visible');
+      });
+    }, { threshold: 0.15 });
+
+    if (section) scrollObserver.observe(section);
+
+    // 2. Lógica para abrir el Modal (conecta con el modal del Navbar)
+    const modalBtn = document.getElementById('openModalDerma');
+    const modal = document.getElementById('modalCita');
+
+    if (modalBtn && modal) {
+      modalBtn.addEventListener('click', () => {
+        modal.classList.add('modal-active');
+        document.body.classList.add('overflow-hidden');
+      });
+    }
+  }
+
+  initDermatologia();
+  document.addEventListener('astro:after-swap', initDermatologia);
+</script>

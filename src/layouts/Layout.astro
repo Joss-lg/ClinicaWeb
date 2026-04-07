@@ -8,8 +8,10 @@ const { title } = Astro.props;
 <html lang="es">
 	<head>
 		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/public/logo2.webp.jpg" />
 		<meta name="viewport" content="width=device-width" />
 		<title>{title}</title>
+
 		
 		<style is:global>
 			@tailwind base;
@@ -18,8 +20,20 @@ const { title } = Astro.props;
 		</style>
 
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-	</head>
-	<body class="font-['Inter'] antialiased bg-white">
-		<slot />
-	</body>
-</html>
+
+		<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<body class="min-h-screen text-gray-900">
+  <slot />
+</body>
+<style>
+  body {
+    background: 
+      radial-gradient(circle at top left, #5272a0bd, transparent 35%),
+      radial-gradient(circle at bottom right, #5272a0bd, transparent 35%),
+      #ffffff;
+
+    background-attachment: fixed; /* 🔥 esto lo deja fijo */
+    background-repeat: no-repeat;
+  }
+</style>

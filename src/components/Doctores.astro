@@ -1,0 +1,149 @@
+---
+// src/components/Doctores.astro
+const doctores = [
+  {
+    n: "Dra. Elena Rodríguez",
+    e: "Cardiología",
+    u: "Tec de Monterrey",
+    i: "doc1.webp",
+    exp: "Experta en salud cardiovascular y alta prevención crítica.",
+    est: "Médico Cirujano (ITESM), Especialidad en Cardiología."
+  },
+  {
+    n: "Dr. Alejandro Méndez",
+    e: "Cirugía General",
+    u: "UNAM",
+    i: "doc2.webp",
+    exp: "Líder en intervenciones de mínima invasión y laparoscopia.",
+    est: "Médico Cirujano (UNAM), Especialidad en Cirugía General."
+  },
+  {
+    n: "Dra. Sofía Vaca",
+    e: "Dermatología",
+    u: "UANL",
+    i: "doc3.webp",
+    exp: "Enfoque en salud cutánea y estética regenerativa.",
+    est: "Médico Cirujano (UANL), Especialidad en Dermatología."
+  },
+  {
+    n: "Dr. Javier López",
+    e: "Urología",
+    u: "UNAM",
+    i: "doc4.webp",
+    exp: "Pionero en el uso de sistemas robóticos urológicos.",
+    est: "Médico Cirujano (UNAM), Especialidad en Urología."
+  }
+];
+---
+
+<section id="doctors-section" class="py-24  bg-transparent w-full relative block">
+  <div class="container mx-auto px-6 max-w-7xl">
+    
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20">
+      <div class="max-w-xl">
+        <span class="text-blue-600 font-bold tracking-widest uppercase text-[10px]">Cuerpo Médico Certificado</span>
+        <h3 class="text-5xl font-serif text-slate-950 mt-2 italic leading-tight">
+          Nuestros <span class="text-blue-900 not-italic font-sans font-black tracking-tighter">Especialistas</span>
+        </h3>
+      </div>
+      <div class="max-w-md border-l-4 border-blue-600 pl-6 py-2">
+        <p class="text-slate-500 text-sm italic leading-relaxed">
+          Tu salud está en manos de profesionales con trayectoria internacional. Certificaciones vigentes y un compromiso inquebrantable con tu bienestar.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+      {doctores.map((doc) => (
+        <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 border border-slate-100 overflow-hidden flex flex-col">
+          <div class="aspect-[4/5] overflow-hidden bg-slate-200">
+            <img src={doc.i} alt={doc.n} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+          </div>
+          <div class="p-8 flex-grow">
+            <span class="bg-blue-900 text-white text-[9px] font-bold uppercase px-3 py-1 rounded-full mb-4 inline-block">{doc.e}</span>
+            <h4 class="text-xl font-serif text-slate-900 italic mb-1 leading-tight">{doc.n}</h4>
+            <p class="text-blue-900 text-[10px] font-bold uppercase mb-6">{doc.u}</p>
+            
+            <button 
+                class="trigger-perfil w-full bg-blue-900 text-white py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all cursor-pointer shadow-lg shadow-blue-100"
+                data-nombre={doc.n} 
+                data-imagen={doc.i} 
+                data-esp={doc.e} 
+                data-tray={doc.exp} 
+                data-est={doc.est}
+            >
+              Ver Perfil Completo
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div id="pestaña-doctor" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[9999] hidden items-center justify-center p-4">
+    <div class="bg-white rounded-[2.5rem] max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col md:flex-row relative animate-in fade-in zoom-in duration-300">
+      
+      <button id="cerrar-pestaña" class="absolute top-6 right-6 z-10 bg-white md:bg-slate-100 p-3 rounded-full text-slate-950 hover:bg-red-600 hover:text-white transition-all shadow-lg cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="md:w-5/12 h-64 md:h-auto overflow-hidden">
+        <img id="p-foto" src="" class="w-full h-full object-cover" alt="Doctor" />
+      </div>
+      <div class="md:w-7/12 p-8 md:p-12 bg-white flex flex-col justify-center">
+        <h5 id="p-tit" class="text-3xl md:text-4xl font-serif italic text-slate-950 mb-1"></h5>
+        <p id="p-sub" class="text-blue-600 font-bold text-xs uppercase mb-8 tracking-widest"></p>
+        
+        <div class="space-y-8">
+          <div>
+            <p class="text-slate-400 text-[10px] font-black uppercase mb-3">Trayectoria Profesional:</p>
+            <p id="p-exp-text" class="text-slate-600 text-sm md:text-base italic leading-relaxed border-l-4 border-blue-600 pl-6 bg-slate-50 py-4 rounded-r-xl"></p>
+          </div>
+          <div>
+            <p class="text-slate-400 text-[10px] font-black uppercase mb-3">Formación y Títulos:</p>
+            <p id="p-est-text" class="text-slate-800 text-sm font-medium leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  const modalDoc = document.getElementById('pestaña-doctor');
+  const btnAbrir = document.querySelectorAll('.trigger-perfil');
+  const btnCerrar = document.getElementById('cerrar-pestaña');
+
+  btnAbrir.forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      const d = btn.dataset;
+      
+      document.getElementById('p-tit').innerText = d.nombre;
+      document.getElementById('p-sub').innerText = d.esp;
+      document.getElementById('p-exp-text').innerText = d.tray;
+      document.getElementById('p-est-text').innerText = d.est;
+      document.getElementById('p-foto').src = d.imagen;
+      
+      modalDoc.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; 
+    };
+  });
+
+  const closeModal = () => {
+    modalDoc.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  };
+
+  if (btnCerrar) {
+    btnCerrar.onclick = closeModal;
+  }
+
+  window.onclick = (event) => {
+    if (event.target === modalDoc) {
+      closeModal();
+    }
+  };
+</script>
