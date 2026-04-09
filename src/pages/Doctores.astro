@@ -1,0 +1,20 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Foother from '../components/Foother.astro';
+import Doctors from '../components/Doctors.astro';
+import Mapa from '../components/Mapa.astro'
+import Process from '../components/Process.astro';
+---
+
+<Layout title="Clínica Privada | Especialidades Médicas">
+	<Navbar />
+	<main>
+		<Doctors />
+        <Process />
+		<Mapa />
+		<Foother />
+	</main>
+	
+</Layout>

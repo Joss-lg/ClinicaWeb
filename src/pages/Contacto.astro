@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ContactHero from '../components/ContactHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ContactInfo from '../components/ContactInfo.astro';
+import Mapa from '../components/Mapa.astro';
+---
+
+<Layout title="Contacto | Clínica Médica">
+  <main class="bg-slate-50">
+    
+    <ContactHero />
+    
+    <section class="py-20 px-6">
+      <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-start">
+        <ContactInfo />
+        <ContactForm />
+      </div>
+    </section>
+
+    <Mapa />
+  </main>
+</Layout>

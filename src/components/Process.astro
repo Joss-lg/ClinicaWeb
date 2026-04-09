@@ -1,0 +1,75 @@
+---
+// src/components/Process.astro
+const steps = [
+  {
+    id: "01",
+    title: "Agendamiento Digital",
+    description: "Utiliza nuestra plataforma en línea o WhatsApp para elegir la especialidad y el horario que mejor se adapte a tu ritmo de vida.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`
+  },
+  {
+    id: "02",
+    title: "Consulta de Élite",
+    description: "Recibe una valoración exhaustiva por parte de nuestros especialistas con tecnología de última generación en un entorno privado.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`
+  },
+  {
+    id: "03",
+    title: "Seguimiento Continuo",
+    description: "Tu salud no termina en la consulta. Diseñamos un plan post-atención y monitoreamos tu progreso hasta tu recuperación total.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`
+  }
+];
+---
+
+<section class="py-24 bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="mb-16">
+            <span class="text-[#0ea5e9] text-xs font-black uppercase tracking-[0.3em] block mb-4">Experiencia del Paciente</span>
+            <h2 class="text-4xl md:text-6xl font-black text-[#1a365d] tracking-tighter uppercase leading-[0.9]">
+                Tu camino hacia el <br/> <span class="text-[#0ea5e9] italic">bienestar</span>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {steps.map((step) => (
+                <div class="group p-10 bg-slate-50 rounded-[2.5rem] hover:bg-[#1a365d] transition-all duration-500 relative">
+                    <div class="text-6xl font-black text-slate-200 group-hover:text-white/10 transition-colors absolute top-8 right-10 select-none">
+                        {step.id}
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 bg-[#0ea5e9] rounded-xl flex items-center justify-center mb-8 shadow-lg shadow-blue-200 group-hover:shadow-none transition-all">
+                            <Fragment set:html={step.icon} class="text-white" />
+                        </div>
+                        <h3 class="text-xl font-black text-[#1a365d] group-hover:text-white mb-4 uppercase tracking-tight">
+                            {step.title}
+                        </h3>
+                        <p class="text-slate-500 group-hover:text-slate-300 text-sm font-medium leading-relaxed">
+                            {step.description}
+                        </p>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <div class="mt-16 flex justify-center">
+            <button id="openModalProcess" class="group flex items-center gap-4 text-[#1a365d] font-black text-xs uppercase tracking-[0.2em] hover:text-[#0ea5e9] transition-colors">
+                Comienza tu proceso ahora
+                <span class="w-10 h-10 border border-slate-200 rounded-full flex items-center justify-center group-hover:border-[#0ea5e9] group-hover:translate-x-2 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Conectar el botón del proceso con el modal de la Navbar
+    document.getElementById('openModalProcess')?.addEventListener('click', () => {
+        // Disparamos el click del botón original de la Navbar para abrir el modal existente
+        document.getElementById('openModal')?.click();
+    });
+</script>

@@ -1,0 +1,127 @@
+---
+// src/components/InstalacionesBento.astro
+
+const images = [
+  { 
+    src: "/instalaciones/urologia.webp", 
+    title: "Urología Avanzada", 
+    desc: "Unidad de litotricia y endourología.",
+    size: "md:col-span-2 md:row-span-2" 
+  },
+  { 
+    src: "/instalaciones/cardiologia.webp", 
+    title: "Cardiología Clínica", 
+    desc: "Equipos de ecocardiografía.",
+    size: "md:col-span-1 md:row-span-1" 
+  },
+  { 
+    src: "/instalaciones/dermatologia.webp", 
+    title: "Dermatología", 
+    desc: "Tecnología láser y fototerapia.",
+    size: "md:col-span-1 md:row-span-2" 
+  },
+  { 
+    src: "/instalaciones/cirugia.webp", 
+    title: "Cirugía General", 
+    desc: "Quirófanos de alta complejidad.",
+    size: "md:col-span-1 md:row-span-1" 
+  },
+  { 
+    src: "/instalaciones/hospitalizacion.webp", 
+    title: "Hospitalización", 
+    desc: "Confort para tu recuperación.",
+    size: "md:col-span-2 md:row-span-1" 
+  },
+];
+---
+
+<section id="instalaciones" class="py-24 bg-white/90 backdrop-blur-md overflow-hidden relative">
+  <div class="max-w-6xl mx-auto px-6">
+    
+    <div class="mb-12 text-center md:text-left bento-reveal">
+      <h2 class="text-4xl md:text-6xl font-black text-[#1a365d] tracking-tighter uppercase leading-tight mb-4">
+        Infraestructura <br/> <span class="text-[#00aeef]">Especializada</span>
+      </h2>
+      <div class="w-24 h-2 bg-[#00aeef] rounded-full mb-6 mx-auto md:mx-0"></div>
+      <p class="text-slate-500 text-lg font-medium max-w-lg">Equipamiento de alta precisión diseñado bajo estándares internacionales de seguridad médica.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[180px]">
+      {images.map((img, index) => (
+        <div 
+          class={`relative group overflow-hidden rounded-[2.5rem] cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-700 bento-item bento-reveal ${img.size}`}
+          style={`transition-delay: ${index * 100}ms`}
+        >
+          <img 
+            src={img.src} 
+            alt={img.title}
+            class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
+            loading="lazy"
+          />
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1a365d] via-[#1a365d]/40 to-transparent opacity-60 group-hover:opacity-90 transition-all duration-500"></div>
+          
+          <div class="absolute inset-0 flex items-end p-8">
+            <div class="transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-out w-full">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-8 h-[2px] bg-[#00aeef] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-700"></div>
+                <p class="text-white font-black uppercase tracking-widest text-xs">{img.title}</p>
+              </div>
+              <p class="text-blue-100 text-sm leading-snug opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 font-medium">
+                {img.desc}
+              </p>
+            </div>
+          </div>
+          
+          <div class="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-[-10px] group-hover:translate-y-0">
+  <div class="bg-white/10 backdrop-blur-md p-2 rounded-full border border-white/20 shadow-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#00aeef] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
+    </svg>
+  </div>
+</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Animación de entrada al hacer scroll */
+  .bento-reveal {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .bento-reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Efecto de borde brillante en hover */
+  .bento-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid transparent;
+    border-radius: 2.5rem;
+    transition: all 0.5s;
+  }
+
+  .bento-item:hover::after {
+    border-color: rgba(0, 174, 239, 0.3);
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.bento-reveal').forEach((el) => observer.observe(el));
+</script>

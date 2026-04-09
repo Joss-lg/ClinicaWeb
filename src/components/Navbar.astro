@@ -1,46 +1,35 @@
 ---
 // src/components/Navbar.astro
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); 
+
+const navLinks = [
+  { name: 'Inicio', href: '/' },
+  { name: 'Especialidades', href: '/Especialidades' },
+  { name: 'Doctores', href: '/Doctores' },
+  { name: 'Contacto', href: '/Contacto' },
+];
 ---
-<nav class="fixed w-full z-50  bg-transparent backdrop-blur-md border-b border-slate-100">
+
+<nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         
         <div class="flex-1">
-            <a href="#inicio" class="text-xl md:text-2xl font-bold text-[#1a365d] tracking-tighter inline-block hover:opacity-90 transition-opacity">
-                CLÍNICA<span class="text-[#0ea5e9] underline decoration-2 underline-offset-4">PRIVADA</span>
+            <a href="/" class="text-xl md:text-2xl font-bold text-[#1a365d] tracking-tighter inline-block hover:opacity-90 transition-opacity uppercase">
+                Clínica<span class="text-[#0ea5e9] underline decoration-2 underline-offset-4 ml-1">Privada</span>
             </a>
         </div>
 
-        <div class="hidden md:flex justify-center gap-7 text-xs font-bold uppercase tracking-[0.15em] text-slate-500 items-center">
-            <a href="#inicio" class="hover:text-[#1a365d] transition-colors">Inicio</a>
-            
-            <div class="relative group h-20 flex items-center">
-                <button class="flex items-center gap-1 hover:text-[#1a365d] transition-colors uppercase cursor-default">
-                    Especialidades
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-
-                <div class="absolute top-[80%] left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                    <div class="bg-white border border-slate-100 shadow-2xl rounded-2xl p-2 w-64 backdrop-blur-xl">
-                        <div class="px-4 py-2 mb-1 text-[10px] text-slate-400 font-black tracking-widest uppercase">Nuestras Unidades</div>
-                        <a href="#urology-section" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-[#1a365d] text-slate-600 transition-all font-semibold normal-case tracking-normal">
-                            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Urología Avanzada
-                        </a>
-                        <a href="#cardiology-section" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-[#1a365d] text-slate-600 transition-all font-semibold normal-case tracking-normal">
-                            <span class="w-1.5 h-1.5 rounded-full bg-orange-300"></span> Cardiologia Clínica
-                        </a>
-                        <a href="#dermatology-section" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-[#1a365d] text-slate-600 transition-all font-semibold normal-case tracking-normal">
-                            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Dermatologia Avanzada
-                        </a>
-                        <a href="#cirugy-section" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-[#1a365d] text-slate-600 transition-all font-semibold normal-case tracking-normal">
-                            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Cirugias Avanzada
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <a href="#doctors-section" class="hover:text-[#1a365d] transition-colors">Doctores</a>
+        <div class="hidden md:flex justify-center gap-8 text-xs font-bold uppercase tracking-[0.15em] text-slate-500 items-center">
+            {navLinks.map(link => {
+                const isActive = (currentPath === link.href.slice(1)) || (link.href === '/' && currentPath === '');
+                return (
+                    <a href={link.href} class={`hover:text-[#1a365d] transition-all relative py-2 group ${isActive ? 'text-[#0ea5e9]' : ''}`}>
+                        {link.name}
+                        <span class={`absolute bottom-0 left-0 w-full h-0.5 bg-[#0ea5e9] transform transition-transform duration-300 origin-left ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                    </a>
+                )
+            })}
         </div>
 
         <div class="flex-1 flex justify-end items-center gap-4">
@@ -48,7 +37,7 @@
                 Reservar Cita
             </button>
             
-            <button id="mobileMenuBtn" class="md:hidden text-[#1a365d] p-1 hover:bg-slate-50 rounded-lg transition-colors">
+            <button id="mobileMenuBtn" class="md:hidden text-[#1a365d] p-2 hover:bg-slate-50 rounded-xl transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
@@ -56,105 +45,81 @@
         </div>
     </div>
 
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-b border-slate-100 px-6 py-8 shadow-xl animate-in slide-in-from-top duration-300">
-        <div class="flex flex-col gap-5 text-xs font-bold uppercase tracking-widest text-slate-500">
-            <a href="#inicio" class="mobile-link">Inicio</a>
-            <a href="#urology-section" class="mobile-link">Urología</a>
-            <a href="#cardiology-section" class="mobile-link">Cardiología</a>
-            <a href="#dermatology-section" class="mobile-link">Dermatología</a>
-            <a href="#doctors-section" class="mobile-link">Doctores</a>
-            
-            <button id="openModalMobile" class="mt-4 w-full bg-[#1a365d] text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all shadow-lg shadow-blue-200">
+    <div id="mobileMenu" class="md:hidden hidden bg-white border-b border-slate-100 px-6 py-8 shadow-2xl">
+        <div class="flex flex-col gap-2 text-xs font-bold uppercase tracking-widest text-slate-500">
+            {navLinks.map(link => (
+                <a href={link.href} class="mobile-link">{link.name}</a>
+            ))}
+            <button id="openModalMobile" class="mt-6 w-full bg-[#1a365d] text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all shadow-lg shadow-blue-200">
                 Agendar Cita Ahora
             </button>
         </div>
     </div>
 </nav>
 
-<div id="modalCita" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 invisible transition-all duration-300">
+
+<div id="modalCita" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 invisible transition-all duration-300 p-4">
     <div id="closeModalBg" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-    <div class="relative bg-white w-full max-w-lg mx-4 rounded-[2.5rem] shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
-        <button id="closeModalBtn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+    <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+        <button id="closeModalBtn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
-        <div class="p-10">
+        <div class="p-8 md:p-10">
             <h2 class="text-3xl font-black text-[#1a365d] mb-2">Agendar Cita</h2>
-            <p class="text-slate-500 mb-8 font-medium">Completa tus datos y te contactaremos en breve.</p>
+            <p class="text-slate-500 mb-8 font-medium">Completa tus datos:</p>
             <form class="space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Nombre" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold" />
-                    <input type="tel" placeholder="Teléfono" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold" />
+                    <input type="text" placeholder="Nombre" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
+                    <input type="tel" placeholder="Teléfono" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
                 </div>
-                <select class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold text-slate-500">
+                <select class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-slate-500">
                     <option>Especialidad...</option>
                     <option>Urología</option>
-                    <option>Cardiologia</option>
-                    <option>Cirugias</option>
+                    <option>Cardiología</option>
+                    <option>Cirugías</option>
                     <option>Dermatología</option>
                 </select>
-                <textarea rows="3" placeholder="Motivo de consulta" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm font-bold resize-none"></textarea>
-                <button type="button" class="w-full py-4 bg-[#1a365d] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all">
-                    Enviar Solicitud
-                </button>
+                <textarea rows="3" placeholder="Motivo de consulta" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold resize-none"></textarea>
+                <button type="button" class="w-full py-4 bg-[#1a365d] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all">Enviar Solicitud</button>
             </form>
         </div>
     </div>
 </div>
 
+
 <style>
-    .modal-active {
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    .modal-active #modalContent {
-        transform: scale(1) !important;
-    }
-    .mobile-link {
-        @apply py-2 border-b border-slate-50 hover:text-[#1a365d] transition-colors;
-    }
+    .modal-active { opacity: 1 !important; visibility: visible !important; }
+    .modal-active #modalContent { transform: scale(1) !important; }
+    .mobile-link { @apply py-4 border-b border-slate-50 hover:text-[#1a365d] transition-colors inline-block w-full; }
 </style>
 
-<script>
-    const modal = document.getElementById('modalCita');
-    const mobileMenu = document.getElementById('mobileMenu');
-    
-    // Botones que abren el modal
-    const openBtnDesktop = document.getElementById('openModal');
-    const openBtnMobile = document.getElementById('openModalMobile');
-    
-    const closeBtn = document.getElementById('closeModalBtn');
-    const closeBg = document.getElementById('closeModalBg');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+<script is:inline>
+    // Usamos una función de inicialización para asegurar compatibilidad
+    function initNav() {
+        const modal = document.getElementById('modalCita');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        document.getElementById('openModal')?.addEventListener('click', () => {
+            modal.classList.add('modal-active');
+            document.body.classList.add('overflow-hidden');
+        });
 
-    function toggleModal() {
-        modal.classList.toggle('modal-active');
-        document.body.classList.toggle('overflow-hidden');
+        document.getElementById('openModalMobile')?.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            modal.classList.add('modal-active');
+            document.body.classList.add('overflow-hidden');
+        });
+
+        const close = () => {
+            modal.classList.remove('modal-active');
+            document.body.classList.remove('overflow-hidden');
+        };
+
+        document.getElementById('closeModalBtn')?.addEventListener('click', close);
+        document.getElementById('closeModalBg')?.addEventListener('click', close);
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
     }
 
-    function toggleMobileMenu() {
-        mobileMenu.classList.toggle('hidden');
-    }
-
-    // Eventos para abrir modal (ambos botones)
-    openBtnDesktop?.addEventListener('click', toggleModal);
-    openBtnMobile?.addEventListener('click', () => {
-        toggleMobileMenu(); // Cierra el menú antes de abrir el modal
-        toggleModal();
-    });
-
-    closeBtn?.addEventListener('click', toggleModal);
-    closeBg?.addEventListener('click', toggleModal);
-    mobileMenuBtn?.addEventListener('click', toggleMobileMenu);
-
-    document.querySelectorAll('.mobile-link').forEach(link => {
-        link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('modal-active')) {
-            toggleModal();
-        }
-    });
+    initNav();
+    document.addEventListener('astro:after-swap', initNav);
 </script>

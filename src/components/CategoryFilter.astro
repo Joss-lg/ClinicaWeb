@@ -1,0 +1,36 @@
+---
+// src/components/CategoryFilter.astro
+const quickLinks = [
+  { name: 'Urología', href: '#urology-section', icon: '🧬' },
+  { name: 'Cardiología', href: '#cardiology-section', icon: '🫀' },
+  { name: 'Dermatología', href: '#dermatology-section', icon: '✨' },
+  { name: 'Cirugía', href: '#cirugy-section', icon: '✂️' },
+];
+---
+
+<div class="sticky top-20 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-start md:justify-center gap-4 md:gap-8 overflow-x-auto py-5 no-scrollbar">
+            {quickLinks.map(link => (
+                <a 
+                    href={link.href} 
+                    class="flex-shrink-0 flex items-center gap-2 px-6 py-2.5 rounded-full bg-slate-50 text-[#1a365d] font-bold text-[10px] uppercase tracking-widest hover:bg-[#1a365d] hover:text-white hover:scale-105 transition-all duration-300 border border-slate-200/50"
+                >
+                    <span class="text-sm">{link.icon}</span> 
+                    {link.name}
+                </a>
+            ))}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Ocultar barra de scroll en móviles para estética limpia */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>

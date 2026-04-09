@@ -1,0 +1,67 @@
+---
+// src/components/SpecialtiesHero.astro
+interface Props {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+}
+
+const { 
+  title = "Cuidado integral especializado",
+  subtitle = "Excelencia Médica",
+  description = "Ponemos a tu disposición un equipo multidisciplinario y tecnología de última generación para transformar tu salud a través de diagnósticos precisos y tratamientos personalizados."
+} = Astro.props;
+---
+
+<section class="relative pt-32 pb-20 overflow-hidden bg-white">
+    <div class="absolute top-0 right-0 -z-10 opacity-20 pointer-events-none translate-x-1/4 -translate-y-1/4">
+        <div class="w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-100 to-transparent blur-3xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="max-w-4xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 mb-8 animate-fade-up">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0ea5e9] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-[#0ea5e9]"></span>
+                </span>
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a365d]">{subtitle}</span>
+            </div>
+
+            <h1 class="text-6xl md:text-8xl font-black text-[#1a365d] tracking-tighter leading-[0.85] uppercase mb-10 animate-fade-up" style="animation-delay: 0.1s;">
+                {title.split(' ').map((word, i) => (
+                    i === 1 ? <><span class="text-[#0ea5e9] italic font-serif lowercase tracking-normal">{word}</span><br/></> : word + ' '
+                ))}
+            </h1>
+
+            <div class="flex flex-col md:flex-row gap-12 items-start animate-fade-up" style="animation-delay: 0.2s;">
+                <div class="w-full md:w-2/3">
+                    <p class="text-xl text-slate-600 leading-relaxed font-medium border-l-4 border-[#0ea5e9] pl-6">
+                        {description}
+                    </p>
+                </div>
+                
+                <div class="flex gap-10">
+                    <div class="flex flex-col">
+                        <span class="text-4xl font-black text-[#1a365d] tracking-tighter">+15</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Unidades</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-4xl font-black text-[#1a365d] tracking-tighter">24/7</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Atención</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+        animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+</style>

@@ -1,0 +1,73 @@
+---
+// src/components/Nosotros.astro
+---
+<section id="nosotros" class="py-24 bg-white/80 backdrop-blur-md overflow-hidden relative">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row gap-16 items-stretch">
+            
+            <div class="flex-1 bg-white p-10 md:p-12 rounded-[3rem] shadow-xl shadow-blue-900/5 border border-slate-100 relative group hover:-translate-y-4 transition-all duration-500 reveal">
+                <div class="absolute -top-6 left-12 w-16 h-16 bg-[#00aeef] rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 rotate-3 group-hover:rotate-0 group-hover:scale-110 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                
+                <h2 class="text-3xl font-black text-[#1a365d] mt-4 mb-6 uppercase tracking-tighter">Nuestra Misión</h2>
+                <p class="text-slate-600 text-lg leading-relaxed font-medium">
+                    Brindar servicios de salud especializados con los más altos estándares de <span class="text-[#00aeef] font-bold underline decoration-blue-200 underline-offset-4">calidad y tecnología avanzada</span>, garantizando una atención humana, ética y oportuna que mejore la calidad de vida de nuestros pacientes.
+                </p>
+            </div>
+
+            <div class="flex-1 bg-[#1a365d] p-10 md:p-12 rounded-[3rem] shadow-2xl shadow-blue-900/20 relative group hover:-translate-y-4 transition-all duration-500 reveal delay-200">
+                <div class="absolute -top-6 left-12 w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg -rotate-3 group-hover:rotate-0 group-hover:scale-110 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#1a365d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </div>
+                
+                <h2 class="text-3xl font-black text-white mt-4 mb-6 uppercase tracking-tighter">Nuestra Visión</h2>
+                <p class="text-blue-100 text-lg leading-relaxed font-medium">
+                    Ser reconocidos como la clínica privada líder en la región, distinguiéndonos por nuestra <span class="text-[#00aeef] font-bold">excelencia clínica</span>, innovación constante en tratamientos y la calidez excepcional de nuestro equipo humano.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Animación de entrada al hacer scroll */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .delay-200 {
+        transition-delay: 0.2s;
+    }
+
+    /* Efecto de brillo sutil en hover para la tarjeta azul */
+    .group:hover {
+        box-shadow: 0 20px 40px rgba(0, 174, 239, 0.15);
+    }
+</style>
+
+<script>
+    // Script simple para activar animaciones al hacer scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+</script>

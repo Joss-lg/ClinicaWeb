@@ -1,0 +1,104 @@
+---
+// src/components/Features.astro
+const features = [
+  { 
+    title: 'Tecnología 4.0', 
+    desc: 'Equipos de última generación para diagnósticos precisos.', 
+    iconName: 'flask-outline',
+    status: 'Certificada', // Agregamos un estado
+    statusIcon: 'checkmark-circle-outline'
+  },
+  { 
+    title: 'Atención 24/7', 
+    desc: 'Estamos disponibles para emergencias en cualquier momento.', 
+    iconName: 'time-outline',
+    status: 'Ininterrumpida',
+    statusIcon: 'pulse-outline'
+  },
+  { 
+    title: 'Seguros Médicos', 
+    desc: 'Trabajamos con las principales aseguradoras del país.', 
+    iconName: 'shield-checkmark-outline',
+    status: 'Cobertura Amplia',
+    statusIcon: 'briefcase-outline'
+  },
+];
+---
+
+<section class="py-24 bg-white/90 backdrop-blur-sm relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    
+    <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+      <h2 class="text-4xl font-black text-[#1a365d] uppercase tracking-tighter mb-4">
+        Excelencia en <span class="text-[#00aeef]">cada detalle</span>
+      </h2>
+      <div class="w-20 h-1.5 bg-[#00aeef] mx-auto rounded-full mb-6"></div>
+      <p class="text-slate-500 font-medium text-lg">Nos esforzamos por ofrecer una experiencia humana y tecnológica superior.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      {features.map((f, index) => (
+        <div 
+          class="feature-card bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 hover:border-[#00aeef]/30 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500 group reveal"
+          style={`transition-delay: ${index * 150}ms`}
+        >
+          <div class="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-[#00aeef] transition-all duration-500 shadow-inner">
+            <ion-icon 
+                name={f.iconName} 
+                class="text-4xl text-[#00aeef] group-hover:text-white transition-colors duration-500"
+            ></ion-icon>
+          </div>
+
+          <h3 class="text-2xl font-bold text-[#1a365d] mb-4 group-hover:text-[#00aeef] transition-colors">
+            {f.title}
+          </h3>
+          <p class="text-slate-500 text-lg leading-relaxed group-hover:text-slate-600 transition-colors mb-8">
+            {f.desc}
+          </p>
+          
+          <div class="pt-6 border-t border-slate-100 flex items-center justify-between group-hover:border-[#00aeef]/20 transition-colors">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-[#00aeef] transition-colors">
+                Estado
+            </span>
+            <div class="flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full group-hover:bg-[#00aeef] transition-colors">
+                <ion-icon name={f.statusIcon} class="text-lg text-[#00aeef] group-hover:text-white transition-colors"></ion-icon>
+                <span class="text-sm font-bold text-[#00aeef] group-hover:text-white transition-colors">
+                    {f.status}
+                </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<style>
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Ajuste de grosor para los iconos */
+  ion-icon {
+    --stroke-width: 42px; /* Esto hace que el icono se vea más grueso y visible */
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) entry.target.classList.add('active');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+</script>
