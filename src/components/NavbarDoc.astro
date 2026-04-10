@@ -1,0 +1,67 @@
+---
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1);
+
+const navLinks = [
+  { name: 'Citas', href: '/dashboard' },
+  { name: 'Mi Perfil', href: '/perfil' },
+];
+---
+
+<nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="flex-1">
+            <a href="/dashboard" class="text-xl md:text-2xl font-bold text-[#1a365d] tracking-tighter inline-block hover:opacity-90 transition-opacity uppercase">
+                Panel<span class="text-[#0ea5e9] underline decoration-2 underline-offset-4 ml-1">Médico</span>
+            </a>
+        </div>
+
+        <div class="hidden md:flex justify-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 items-center">
+            {navLinks.map(link => {
+                const isActive = (currentPath === link.href.slice(1));
+                return (
+                    <a href={link.href} class={`hover:text-[#1a365d] transition-all relative py-2 group ${isActive ? 'text-[#0ea5e9]' : ''}`}>
+                        {link.name}
+                        <span class={`absolute bottom-0 left-0 w-full h-0.5 bg-[#0ea5e9] transform transition-transform duration-300 origin-left ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                    </a>
+                )
+            })}
+        </div>
+
+        <div class="flex-1 flex justify-end items-center gap-6">
+            <div class="hidden lg:flex flex-col items-end border-r border-slate-200 pr-6">
+                <span id="nav-doc-nombre" class="text-[11px] font-black text-[#1a365d] uppercase leading-none">Cargando...</span>
+                <span id="nav-doc-esp" class="text-[9px] font-bold text-[#0ea5e9] uppercase tracking-tighter mt-1">Especialidad</span>
+            </div>
+            
+            <button id="logout-general" class="flex items-center gap-2 bg-red-50 text-red-500 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all active:scale-95 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7" />
+                </svg>
+                <span>Salir</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<script is:inline>
+    const loadDoctorNav = () => {
+        const sesion = JSON.parse(localStorage.getItem('doctor_sesion'));
+        const nombreEl = document.getElementById('nav-doc-nombre');
+        const espEl = document.getElementById('nav-doc-esp');
+
+        if (sesion) {
+            if (nombreEl) nombreEl.innerText = sesion.nombre;
+            if (espEl) espEl.innerText = sesion.especialidad;
+        }
+
+        document.getElementById('logout-general')?.addEventListener('click', () => {
+            localStorage.removeItem('doctor_sesion');
+            window.location.href = '/login';
+        });
+    }
+
+    // Ejecutar inmediatamente y en cada carga de página de Astro
+    loadDoctorNav();
+    document.addEventListener('astro:page-load', loadDoctorNav);
+</script>

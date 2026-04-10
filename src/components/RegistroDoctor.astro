@@ -1,0 +1,124 @@
+---
+// src/components/RegistroDoctor.astro
+---
+
+<p class="mt-6 text-center text-sm text-slate-500 font-medium">
+  ¿Eres nuevo? 
+  <button id="openRegister" type="button" class="text-[#0ea5e9] font-bold hover:underline">Crea una cuenta</button>
+</p>
+
+<div id="registerModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+    <div class="bg-white w-full max-w-md rounded-[3rem] p-10 shadow-2xl transition-all border border-slate-100">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-black text-[#1a365d] uppercase tracking-tighter">Nuevo Registro</h2>
+            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Únete al equipo médico</p>
+        </div>
+
+<div class="relative min-h-[400px]">
+
+    <form id="registerForm" class="space-y-4 opacity-100 transition-opacity duration-300">
+        <input type="text" name="nombre" placeholder="Nombre Completo" required class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:border-[#0ea5e9] focus:ring-4 focus:ring-blue-100 outline-none font-bold text-slate-700 transition-all" />
+        
+        <select name="especialidad" required class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:border-[#0ea5e9] outline-none font-bold text-slate-500 appearance-none transition-all">
+            <option value="" disabled selected>Selecciona Especialidad</option>
+            <option value="Cardiología">Cardiología</option>
+            <option value="Dermatología">Dermatología</option>
+            <option value="Cirugía General">Cirugía General</option>
+            <option value="Urología">Urología</option>
+        </select>
+
+        <input type="email" name="email" placeholder="Correo Institucional" required class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:border-[#0ea5e9] outline-none font-bold text-slate-700" />
+        
+        <input type="password" name="password" placeholder="Contraseña segura" required class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:border-[#0ea5e9] outline-none font-bold text-slate-700" />
+        
+        <button type="submit" class="w-full py-4 bg-[#1a365d] text-white rounded-2xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] hover:shadow-lg hover:shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+            Confirmar Registro
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+        </button>
+        
+        <button id="closeRegister" type="button" class="w-full text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-3 hover:text-red-400 transition-colors">
+            Cancelar y volver
+        </button>
+    </form>
+
+    <div id="registerSuccess" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 transition-opacity duration-500">
+        <div class="w-24 h-24 bg-blue-50 text-[#0ea5e9] rounded-full flex items-center justify-center mb-6 animate-bounce-subtle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        
+        <h3 class="text-3xl font-black text-[#1a365d] uppercase tracking-tighter mb-2">¡Bienvenido!</h3>
+        <p class="text-slate-500 font-medium max-w-xs mb-8">
+            Tu cuenta ha sido creada con éxito. Ya puedes cerrar esta ventana e iniciar sesión en el panel principal.
+        </p>
+        
+        <button id="successClose" type="button" class="px-8 py-3 bg-[#1a365d] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all">
+            Entendido, ir al Login
+        </button>
+    </div>
+</div>
+
+<script is:inline>
+  const regModal = document.getElementById('registerModal');
+  const openRegBtn = document.getElementById('openRegister');
+  const closeRegBtn = document.getElementById('closeRegister');
+  const successCloseBtn = document.getElementById('successClose');
+  
+  const regForm = document.getElementById('registerForm');
+  const successPanel = document.getElementById('registerSuccess');
+
+  // Función para cerrar el modal por completo y resetear estados
+  const fullClose = () => {
+    regModal.classList.add('hidden');
+    // Pequeño delay para resetear visualmente sin que el usuario lo vea
+    setTimeout(() => {
+        regForm.classList.remove('hidden', 'opacity-0');
+        successPanel.classList.add('hidden', 'opacity-0');
+        regForm.reset();
+    }, 300);
+  }
+
+  if (openRegBtn) openRegBtn.onclick = () => regModal.classList.remove('hidden');
+  if (closeRegBtn) closeRegBtn.onclick = fullClose;
+  if (successCloseBtn) successCloseBtn.onclick = fullClose;
+
+  regForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = regForm.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = `
+        PROCESANDO...
+        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+    `;
+
+    try {
+      const response = await fetch('http://127.0.0.1/register_doctor.php', {
+        method: 'POST',
+        body: new FormData(regForm)
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        // --- AQUÍ ESTÁ LA NUEVA MAGIA ---
+        // 1. Ocultar Formulario con transición
+        regForm.classList.add('opacity-0');
+        setTimeout(() => {
+            regForm.classList.add('hidden');
+            // 2. Mostrar Panel de Éxito con transición
+            successPanel.classList.remove('hidden');
+            setTimeout(() => successPanel.classList.remove('opacity-0'), 50);
+        }, 300);
+        
+      } else {
+        alert("Error: " + result.message); // Mantenemos el alert para errores (es más rápido)
+        btn.disabled = false;
+        btn.innerHTML = `Confirmar Registro <svg ...></svg>`; // Resetear botón
+      }
+    } catch (error) {
+      alert("Error de conexión con el servidor de registro.");
+      btn.disabled = false;
+      btn.innerHTML = `Confirmar Registro <svg ...></svg>`; // Resetear botón
+    }
+  });
+</script>

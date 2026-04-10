@@ -6,6 +6,7 @@ interface Props {
 }
 const { title } = Astro.props;
 ---
+<!DOCTYPE html>
 <html lang="es">
 	<head>
 		<meta charset="utf-8" />
@@ -28,14 +29,3 @@ const { title } = Astro.props;
 	<Navbar />
   <slot />
 </body>
-<style>
-  body {
-    background: 
-      radial-gradient(circle at top left, #5272a0bd, transparent 35%),
-      radial-gradient(circle at bottom right, #5272a0bd, transparent 35%),
-      #ffffff;
-
-    background-attachment: fixed; /* 🔥 esto lo deja fijo */
-    background-repeat: no-repeat;
-  }
-</style>

@@ -97,28 +97,34 @@
         <button id="intro-closeModalBtn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
-        <div class="p-8 md:p-10">
-            <h2 class="text-3xl font-black text-[#1a365d] mb-2">Agendar Cita</h2>
-            <p class="text-slate-500 mb-8 font-medium">Completa tus datos:</p>
-            <form class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Nombre" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
-                    <input type="tel" placeholder="Teléfono" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
-                </div>
-                <select class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-slate-500">
-                    <option disabled selected>Especialidad...</option>
-                    <option>Urología</option>
-                    <option>Cardiología</option>
-                    <option>Cirugías</option>
-                    <option>Dermatología</option>
-                </select>
-                <textarea rows="3" placeholder="Motivo de consulta" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold resize-none"></textarea>
-                <button type="button" class="w-full py-4 bg-[#1a365d] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all">Enviar Solicitud</button>
-            </form>
-        </div>
+       <div class="p-8 md:p-10">
+    <div id="intro-formContainer">
+        <h2 class="text-3xl font-black text-[#1a365d] mb-2">Agendar Cita</h2>
+        <p class="text-slate-500 mb-8 font-medium">Completa tus datos:</p>
+        
+        <form id="intro-appointmentForm" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input name="nombre" type="text" required placeholder="Nombre" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
+                <input name="telefono" type="tel" required placeholder="Teléfono" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
+            </div>
+            <select name="especialidad" required class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-slate-500">
+                <option value="" disabled selected>Especialidad...</option>
+                <option>Urología</option>
+                <option>Cardiología</option>
+                <option>Cirugías</option>
+                <option>Dermatología</option>
+            </select>
+            <textarea name="motivo" rows="3" placeholder="Motivo de consulta" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold resize-none"></textarea>
+            
+            <button type="submit" id="intro-submitBtn" class="w-full py-4 bg-[#1a365d] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all shadow-lg shadow-blue-900/10">
+                Enviar Solicitud
+            </button>
+        </form>
     </div>
-  </div>
-</section>
+
+    <div id="intro-errorStatus" class="hidden mt-4 p-4 bg-red-50 text-red-600 rounded-xl text-sm font-bold text-center border border-red-100"></div>
+</div>
+
 
 <style>
   @keyframes fadeInUp {
@@ -149,27 +155,81 @@
 
 </style>
 
-<script is:inline>
-  const setupIntroModal = () => {
+<script>
+  const initIntroMedicalLogic = () => {
     const modal = document.getElementById('intro-modalCita');
+    const container = document.getElementById('intro-formContainer');
     const btnOpen = document.getElementById('intro-btnOpen');
     const btnClose = document.getElementById('intro-closeModalBtn');
     const bgClose = document.getElementById('intro-closeModalBg');
+    const form = document.getElementById('intro-appointmentForm') as HTMLFormElement;
+    const errorMsg = document.getElementById('intro-errorStatus');
+    const submitBtn = document.getElementById('intro-submitBtn') as HTMLButtonElement;
+
+    if (!modal || !btnOpen) return;
 
     const toggle = () => {
       modal.classList.toggle('intro-active');
       document.body.style.overflow = modal.classList.contains('intro-active') ? 'hidden' : 'auto';
     };
 
-    if (btnOpen) btnOpen.onclick = toggle;
+    btnOpen.onclick = toggle;
     if (btnClose) btnClose.onclick = toggle;
     if (bgClose) bgClose.onclick = toggle;
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('intro-active')) toggle();
-    });
+    if (form && submitBtn && container) {
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = "PROCESANDO...";
+        if (errorMsg) errorMsg.classList.add('hidden');
+
+        try {
+          const response = await fetch('http://localhost/save_appointment.php', {
+            method: 'POST',
+            body: new FormData(form)
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // DISEÑO DE CONFIRMACIÓN
+            container.innerHTML = `
+              <div class="text-center py-10 animate-fade-in">
+                <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 mb-2 uppercase tracking-tight">¡Solicitud Enviada!</h3>
+                <p class="text-slate-500 font-medium mb-8 leading-relaxed">
+                  Hemos recibido tus datos correctamente. Un especialista se pondrá en contacto contigo a la brevedad.
+                </p>
+                <button onclick="location.reload()" class="px-8 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-colors text-sm uppercase tracking-widest">
+                  Cerrar
+                </button>
+              </div>
+            `;
+          } else {
+            throw new Error(result.error || "Error en el servidor");
+          }
+        } catch (error: any) {
+          if (errorMsg) {
+            errorMsg.textContent = "Lo sentimos: " + error.message;
+            errorMsg.classList.remove('hidden');
+          }
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerText = originalText;
+        }
+      };
+    }
   };
 
-  setupIntroModal();
-  document.addEventListener('astro:after-swap', setupIntroModal);
+  initIntroMedicalLogic();
+  document.addEventListener('astro:page-load', initIntroMedicalLogic);
 </script>
+
+

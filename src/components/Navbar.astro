@@ -1,7 +1,12 @@
 ---
 // src/components/Navbar.astro
+import AppointmentForm from './AppointmentForm.astro';
+
 const pathname = new URL(Astro.request.url).pathname;
 const currentPath = pathname.slice(1); 
+
+// Mantenemos la lógica de sesión por si necesitas usarla internamente
+const hasSession = Astro.cookies.has('user_session');
 
 const navLinks = [
   { name: 'Inicio', href: '/' },
@@ -13,7 +18,6 @@ const navLinks = [
 
 <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        
         <div class="flex-1">
             <a href="/" class="text-xl md:text-2xl font-bold text-[#1a365d] tracking-tighter inline-block hover:opacity-90 transition-opacity uppercase">
                 Clínica<span class="text-[#0ea5e9] underline decoration-2 underline-offset-4 ml-1">Privada</span>
@@ -36,7 +40,6 @@ const navLinks = [
             <button id="openModal" class="hidden md:block bg-[#1a365d] text-white px-7 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all active:scale-95 shadow-lg shadow-blue-900/10">
                 Reservar Cita
             </button>
-            
             <button id="mobileMenuBtn" class="md:hidden text-[#1a365d] p-2 hover:bg-slate-50 rounded-xl transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
@@ -48,78 +51,153 @@ const navLinks = [
     <div id="mobileMenu" class="md:hidden hidden bg-white border-b border-slate-100 px-6 py-8 shadow-2xl">
         <div class="flex flex-col gap-2 text-xs font-bold uppercase tracking-widest text-slate-500">
             {navLinks.map(link => (
-                <a href={link.href} class="mobile-link">{link.name}</a>
+                <a href={link.href} class="mobile-link py-3 border-b border-slate-50">{link.name}</a>
             ))}
-            <button id="openModalMobile" class="mt-6 w-full bg-[#1a365d] text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all shadow-lg shadow-blue-200">
+            <button id="openModalMobile" class="mt-6 w-full bg-[#1a365d] text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all">
                 Agendar Cita Ahora
             </button>
         </div>
     </div>
 </nav>
 
-
-<div id="modalCita" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 invisible transition-all duration-300 p-4">
+<div id="modalCita" class="fixed inset-0 z-[9999] flex items-center justify-center opacity-0 invisible transition-all duration-300 p-4">
     <div id="closeModalBg" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
     <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
-        <button id="closeModalBtn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
+        <button id="closeModalBtn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 z-[101]">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
         <div class="p-8 md:p-10">
-            <h2 class="text-3xl font-black text-[#1a365d] mb-2">Agendar Cita</h2>
-            <p class="text-slate-500 mb-8 font-medium">Completa tus datos:</p>
-            <form class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <input type="text" placeholder="Nombre" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
-                    <input type="tel" placeholder="Teléfono" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" />
-                </div>
-                <select class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-slate-500">
-                    <option>Especialidad...</option>
-                    <option>Urología</option>
-                    <option>Cardiología</option>
-                    <option>Cirugías</option>
-                    <option>Dermatología</option>
-                </select>
-                <textarea rows="3" placeholder="Motivo de consulta" class="w-full px-5 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold resize-none"></textarea>
-                <button type="button" class="w-full py-4 bg-[#1a365d] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] transition-all">Enviar Solicitud</button>
-            </form>
+            <AppointmentForm />
         </div>
     </div>
 </div>
 
-
 <style>
+    :global(body.overflow-hidden) { overflow: hidden; }
     .modal-active { opacity: 1 !important; visibility: visible !important; }
     .modal-active #modalContent { transform: scale(1) !important; }
-    .mobile-link { @apply py-4 border-b border-slate-50 hover:text-[#1a365d] transition-colors inline-block w-full; }
-</style>
-
-<script is:inline>
-    // Usamos una función de inicialización para asegurar compatibilidad
-    function initNav() {
-        const modal = document.getElementById('modalCita');
-        const mobileMenu = document.getElementById('mobileMenu');
-        
-        document.getElementById('openModal')?.addEventListener('click', () => {
-            modal.classList.add('modal-active');
-            document.body.classList.add('overflow-hidden');
-        });
-
-        document.getElementById('openModalMobile')?.addEventListener('click', () => {
-            mobileMenu.classList.add('hidden');
-            modal.classList.add('modal-active');
-            document.body.classList.add('overflow-hidden');
-        });
-
-        const close = () => {
-            modal.classList.remove('modal-active');
-            document.body.classList.remove('overflow-hidden');
-        };
-
-        document.getElementById('closeModalBtn')?.addEventListener('click', close);
-        document.getElementById('closeModalBg')?.addEventListener('click', close);
-        document.getElementById('mobileMenuBtn')?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    
+    /* Animación de entrada */
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
     }
 
-    initNav();
-    document.addEventListener('astro:after-swap', initNav);
+    /* Animación de la barra de progreso */
+    @keyframes progress {
+        from { width: 0%; }
+        to { width: 100%; }
+    }
+    .animate-progress {
+        animation: progress 3.5s linear forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</style>
+
+<script>
+    const initModalLogic = () => {
+        const modal = document.getElementById('modalCita');
+        const openBtns = document.querySelectorAll('#openModal, #openModalMobile');
+        const closeBtns = document.querySelectorAll('#closeModalBtn, #closeModalBg');
+        const form = document.getElementById('appointmentForm') as HTMLFormElement;
+        const formMessage = document.getElementById('formMessage');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+        // 1. Abrir modal
+        openBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                mobileMenu?.classList.add('hidden');
+                modal?.classList.add('modal-active');
+                document.body.classList.add('overflow-hidden');
+            });
+        });
+
+        // 2. Cerrar modal
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal?.classList.remove('modal-active');
+                document.body.classList.remove('overflow-hidden');
+            });
+        });
+
+        // 3. Menú Móvil toggle
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // 4. Lógica de conexión con Base de Datos (PHP)
+        if (form && formMessage) {
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                if (!submitBtn) return;
+
+                const originalText = submitBtn.innerText;
+                submitBtn.disabled = true;
+                submitBtn.innerText = "ENVIANDO...";
+
+                try {
+                    const response = await fetch('http://localhost/save_appointment.php', {
+                        method: 'POST',
+                        body: new FormData(form)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+    // Ocultamos el formulario
+    form.classList.add('hidden');
+    
+    // Inyectamos el diseño de confirmación profesional
+    formMessage.innerHTML = `
+        <div class="text-center py-10 animate-fade-in">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-black text-[#1a365d] mb-2 uppercase tracking-tight">
+                ¡Cita Registrada!
+            </h3>
+            <p class="text-slate-500 font-medium mb-8 leading-relaxed">
+                Hemos recibido tu solicitud. Un asistente de la clínica te contactará en breve para confirmar el horario.
+            </p>
+            <div class="flex flex-col gap-3">
+                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 animate-progress"></div>
+                </div>
+                <p class="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
+                    Redirigiendo al inicio...
+                </p>
+            </div>
+        </div>
+    `;
+    formMessage.classList.remove('hidden');
+
+    // Redirección después de mostrar el diseño
+    setTimeout(() => {
+        window.location.href = '/';
+    }, 3500);
+} else {
+                        throw new Error(result.error || 'Error desconocido');
+                    }
+                } catch (err: any) {
+                    alert("Error: " + err.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalText;
+                }
+            };
+        }
+    };
+
+    // Reinicialización para Astro
+    initModalLogic();
+    document.addEventListener('astro:page-load', initModalLogic);
 </script>

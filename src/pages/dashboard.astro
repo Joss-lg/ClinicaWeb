@@ -1,0 +1,203 @@
+---
+import LayoutDoctor from '../layouts/LayoutDoctor.astro';
+---
+
+<LayoutDoctor title="Gestión de Citas - Panel Médico">
+  <div class="container mx-auto px-6 max-w-6xl">
+    
+    <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-10 flex flex-col md:flex-row items-center gap-8 animate-fade-in relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-50/50 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+        
+        <div class="relative">
+            <div id="avatar-container" class="w-32 h-32 bg-[#0ea5e9] rounded-[2.5rem] flex items-center justify-center text-white text-5xl font-black shadow-xl shadow-blue-100 overflow-hidden border-4 border-white">
+                <span id="doc-inicial">D</span>
+                <img id="doc-foto" class="hidden w-full h-full object-cover" src="" alt="Doctor">
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-green-400 w-6 h-6 rounded-full border-4 border-white shadow-sm"></div>
+        </div>
+
+        <div class="text-center md:text-left relative z-10">
+          <p class="text-[10px] font-black text-[#0ea5e9] uppercase tracking-[0.3em] mb-1">Bienvenido de nuevo</p>
+          <h1 id="doc-nombre" class="text-4xl font-black text-[#1a365d] uppercase tracking-tighter leading-tight">Cargando...</h1>
+          <div class="flex items-center gap-3 mt-2 justify-center md:justify-start">
+              <span id="doc-esp" class="bg-slate-100 text-slate-500 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest"></span>
+              <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+              <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest" id="fecha-actual"></span>
+          </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 overflow-hidden animate-fade-in-up">
+        <div class="p-8 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-white to-slate-50/50">
+          <div>
+              <h2 class="text-xl font-black text-[#1a365d] uppercase tracking-tight flex items-center gap-3">
+                  Próximas Consultas
+                  <span class="bg-[#0ea5e9] text-white text-[10px] px-2.5 py-0.5 rounded-lg" id="contador-citas">0</span>
+              </h2>
+              <p class="text-slate-400 text-xs font-medium mt-1">Gestiona tus pacientes agendados para hoy</p>
+          </div>
+          
+          <div class="flex gap-2">
+              <button onclick="location.reload()" class="p-3 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-[#0ea5e9] hover:border-[#0ea5e9] transition-all shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              </button>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-100">
+              <tr>
+                <th class="px-8 py-5">Paciente</th>
+                <th class="px-8 py-5">Horario & Fecha</th>
+                <th class="px-8 py-5">Motivo de Consulta</th>
+                <th class="px-8 py-5 text-right">Estado / Acción</th>
+              </tr>
+            </thead>
+            <tbody id="lista-citas" class="text-sm">
+              <tr>
+                <td colspan="4" class="px-8 py-32 text-center">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="w-12 h-12 border-4 border-blue-100 border-t-[#0ea5e9] rounded-full animate-spin"></div>
+                        <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Sincronizando expedientes...</p>
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+</LayoutDoctor>
+
+<script is:inline>
+    // Configuración Inicial
+    const doctorData = JSON.parse(localStorage.getItem('doctor_sesion'));
+    const fechaActual = new Date().toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('fecha-actual').innerText = fechaActual;
+
+    if (!doctorData) {
+      window.location.href = '/login';
+    } else {
+      document.getElementById('doc-nombre').innerText = doctorData.nombre;
+      document.getElementById('doc-esp').innerText = doctorData.especialidad;
+      document.getElementById('doc-inicial').innerText = doctorData.nombre.charAt(0);
+      
+      if (doctorData.foto) {
+          const img = document.getElementById('doc-foto');
+          img.src = doctorData.foto;
+          img.classList.remove('hidden');
+          document.getElementById('doc-inicial').classList.add('hidden');
+      }
+
+      cargarCitasReales(doctorData.especialidad);
+    }
+
+    async function cargarCitasReales(especialidad) {
+      const tabla = document.getElementById('lista-citas');
+      const contador = document.getElementById('contador-citas');
+
+      try {
+        const url = `http://127.0.0.1/get_appointments.php?esp=${encodeURIComponent(especialidad)}`;
+        const response = await fetch(url);
+        const citas = await response.json();
+
+        if (!citas || citas.length === 0) {
+          tabla.innerHTML = `
+            <tr>
+              <td colspan="4" class="px-8 py-24 text-center">
+                <div class="max-w-xs mx-auto opacity-40 grayscale mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+                <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Sin citas pendientes hoy</p>
+              </td>
+            </tr>`;
+          contador.innerText = "0";
+          return;
+        }
+
+        contador.innerText = citas.length;
+
+        tabla.innerHTML = citas.map(cita => {
+          const completado = cita.estado === 'completado';
+          return `
+          <tr class="border-b border-slate-50 hover:bg-blue-50/30 transition-all group">
+            <td class="px-8 py-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-[#1a365d] font-black text-xs group-hover:bg-[#0ea5e9] group-hover:text-white transition-colors">
+                        ${(cita.paciente || cita.nombre).charAt(0)}
+                    </div>
+                    <div>
+                        <p class="font-black text-[#1a365d] uppercase tracking-tight text-sm">${cita.paciente || cita.nombre}</p>
+                        <p class="text-[10px] text-slate-400 font-bold tracking-wide">ID: #${1000 + parseInt(cita.id)}</p>
+                    </div>
+                </div>
+            </td>
+            <td class="px-8 py-6">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2 text-slate-700 font-black text-xs">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-[#0ea5e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    ${cita.hora || 'Por definir'}
+                </div>
+                <span class="text-slate-400 text-[10px] font-bold uppercase ml-5">${cita.fecha || cita.fecha_registro}</span>
+              </div>
+            </td>
+            <td class="px-8 py-6">
+              <div class="max-w-[250px]">
+                  <p class="text-slate-500 text-xs leading-relaxed italic line-clamp-2">"${cita.motivo || cita.mensaje}"</p>
+              </div>
+            </td>
+            <td class="px-8 py-6 text-right">
+              <button 
+                onclick="completarCita(${cita.id}, this)"
+                class="${completado 
+                    ? 'bg-slate-100 text-slate-400 cursor-default px-6 py-2.5 rounded-xl text-[10px] font-black uppercase' 
+                    : 'bg-white border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase transition-all shadow-lg shadow-green-500/10 active:scale-95'}"
+                ${completado ? 'disabled' : ''}
+              >
+                ${completado ? 'Atendido ✓' : 'Marcar como Atendido'}
+              </button>
+            </td>
+          </tr>
+        `}).join('');
+
+      } catch (error) {
+        console.error("Error:", error);
+        tabla.innerHTML = `<tr><td colspan="4" class="px-8 py-20 text-center text-red-500 font-black uppercase text-xs">Error de sincronización con el servidor</td></tr>`;
+      }
+    }
+
+    async function completarCita(idCita, botonElemento) {
+      if (botonElemento.disabled) return;
+      
+      const originalHtml = botonElemento.innerHTML;
+      botonElemento.innerHTML = "Procesando...";
+
+      try {
+        const response = await fetch('http://127.0.0.1/completar_cita.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: idCita })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          botonElemento.innerHTML = 'Atendido ✓';
+          botonElemento.classList.remove('border-green-500', 'text-green-500', 'hover:bg-green-500', 'hover:text-white', 'shadow-green-500/10');
+          botonElemento.classList.add('bg-slate-100', 'text-slate-400', 'cursor-default');
+          botonElemento.disabled = true;
+        }
+      } catch (error) {
+        alert('Error de conexión.');
+        botonElemento.innerHTML = originalHtml;
+      }
+    }
+</script>
+
+<style>
+  .animate-fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+  .animate-fade-in-up { animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>

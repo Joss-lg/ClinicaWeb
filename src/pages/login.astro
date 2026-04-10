@@ -1,0 +1,157 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RegistroDoctor from '../components/RegistroDoctor.astro';
+---
+
+<Layout title="Acceso Doctores - Clínica Privada">
+  <main class="flex items-center justify-center min-h-screen bg-slate-50 px-4">
+    <div class="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl shadow-blue-900/5 p-8 md:p-12 animate-fade-in-up">
+      
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-2xl mb-4 animate-bounce-subtle">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#0ea5e9]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h1 class="text-3xl font-black text-[#1a365d] tracking-tight">Bienvenido, <span class="text-[#0ea5e9]">Doctor</span></h1>
+        <p class="text-slate-400 mt-2 font-medium">Ingresa para gestionar tus citas</p>
+      </div>
+
+      <form id="loginForm" class="space-y-5">
+        <div class="group">
+          <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 ml-1 group-focus-within:text-[#0ea5e9] transition-colors">
+            Correo Electrónico
+          </label>
+          <input 
+            type="email" 
+            name="email" 
+            required 
+            placeholder="ejemplo@clinica.com"
+            class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-[#0ea5e9] focus:ring-4 focus:ring-blue-100 outline-none transition-all duration-300 font-bold text-slate-700"
+          />
+        </div>
+
+        <div class="group">
+          <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 ml-1 group-focus-within:text-[#0ea5e9] transition-colors">
+            Contraseña
+          </label>
+          <input 
+            type="password" 
+            name="password" 
+            required 
+            placeholder="••••••••"
+            class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-[#0ea5e9] focus:ring-4 focus:ring-blue-100 outline-none transition-all duration-300 font-bold text-slate-700"
+          />
+        </div>
+
+        
+          <div id="errorContainer" class="hidden">
+          <div class="bg-red-50 text-red-500 text-sm p-4 rounded-xl font-bold flex items-center gap-2 animate-shake">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <span id="errorText"></span>
+          </div>
+          </div>
+        
+
+        <button 
+          type="submit" 
+          class="w-full py-4 bg-[#1a365d] text-white rounded-2xl font-bold uppercase tracking-widest hover:bg-[#0ea5e9] hover:shadow-xl hover:shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2"
+        >
+          Acceder al Panel
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+      </form>
+      <RegistroDoctor />
+
+      <div class="mt-8 text-center">
+        <a href="/" class="text-sm font-bold text-slate-400 hover:text-[#1a365d] transition-colors">
+          ← Volver a la página principal
+        </a>
+      </div>
+    </div>
+  </main>
+
+<script is:inline>
+  // Esperamos a que el DOM esté listo
+  const form = document.getElementById('loginForm');
+  const errorContainer = document.getElementById('errorContainer');
+  const errorText = document.getElementById('errorText');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const btn = form.querySelector('button');
+      
+      // Limpiamos errores anteriores si el contenedor existe
+      if (errorContainer) errorContainer.classList.add('hidden');
+      
+      btn.disabled = true;
+      btn.innerText = "VERIFICANDO...";
+
+      try {
+        const response = await fetch('http://127.0.0.1/login_check.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          localStorage.setItem('doctor_sesion', JSON.stringify(result));
+          window.location.href = '/dashboard';
+        } else {
+          // Si hay error, mostramos el contenedor y el texto
+          if (errorText) errorText.innerText = result.message;
+          if (errorContainer) errorContainer.classList.remove('hidden');
+          btn.disabled = false;
+          btn.innerText = "Acceder al Panel";
+        }
+      } catch (error) {
+        if (errorText) errorText.innerText = "Error de conexión con XAMPP";
+        if (errorContainer) errorContainer.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerText = "Acceder al Panel";
+      }
+    });
+  }
+</script>
+</Layout>
+
+<style>
+  /* Animación de entrada hacia arriba */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Animación de error (vibración) */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* Rebote sutil para el icono */
+  @keyframes bounceSubtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-shake {
+    animation: shake 0.4s ease-in-out 0s 2;
+  }
+
+  .animate-bounce-subtle {
+    animation: bounceSubtle 3s ease-in-out infinite;
+  }
+</style>

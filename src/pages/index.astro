@@ -1,7 +1,6 @@
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
 import Intro from '../components/Intro.astro';
 import Nosotros from '../components/Nosotros.astro';
 import Features from '../components/Features.astro';
@@ -11,7 +10,6 @@ import Mapa from '../components/Mapa.astro'
 ---
 
 <Layout title="Clínica Privada | Especialidades Médicas">
-	<Navbar />
 	<main>
 		<Intro />
 		<div class="spacer"></div>
@@ -26,44 +24,64 @@ import Mapa from '../components/Mapa.astro'
 	
 </Layout>
 
-<style is:global>
-  body {
-		margin: 0;
-		font-family: system-ui, sans-serif; /* O tu tipografía */
-		
-		/* --- ESTA ES LA PARTE IMPORTANTE CON EL FILTRO --- */
-		
-		/* Usamos background-image con múltiples capas:
-		   1ª Capa (Overlay): Un gradiente con el azul de "experta." 
-		   (`#00aeef`) pero con transparencia (`rgba`).
-		   He creado una transición sutil de más oscuro a más claro para 
-		   mejorar la legibilidad de textos futuros sobre el fondo.
-		   
-		   2ª Capa: Tu imagen de fondo original.
-		*/
-		background-image: 
-			linear-gradient(rgba(0, 174, 239, 0.45) 0%, rgba(0, 174, 239, 0.25) 100%), 
-			url('/public/fondo.jpg'); /* Reemplaza por tu ruta real */
-		
-		/* Mantener el efecto fijo para que se vea entre componentes */
-		background-attachment: fixed;
-		background-position: center;
-		background-size: cover;
-		background-repeat: no-repeat;
-		backdrop-filter: brightness(1.1) contrast(1.1);
-		min-height: 100vh;
-	}
-	
-	.texto-overlay-logo-azul {
-		color: white; /* Texto blanco resalta mejor sobre el azul */
-		text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mayor profundidad */
-	}
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+// ... tus otros imports
+---
 
-	.spacer {
-    /* Esta altura define qué tanto de la imagen se verá */
-    height: 450px; 
-    /* No lleva fondo, para que sea transparente y se vea el body */
-    background: transparent;
-	backdrop-filter: blur(2px);
-  }
+<Layout title="Clínica Privada | Especialidades Médicas">
+    <div class="fixed-background"></div>
+
+    <main class="relative z-10">
+        <div class="spacer-mini"></div> <Intro />
+        <div class="spacer"></div>
+        <Nosotros />
+        <div class="spacer"></div>
+        <Features />
+        <div class="spacer"></div>
+        <InstalacionesBento />
+        <Mapa />
+        <div class="spacer"></div>
+        <Foother />
+    </main>
+</Layout>
+
+<style is:global>
+    body {
+        margin: 0;
+        padding: 0;
+        /* Quitamos el fondo del body para que no bloquee el modal */
+        background-color: #f0f4f8; 
+    }
+
+    .fixed-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        /* El z-index negativo es vital para que no tape los botones */
+        z-index: -1; 
+        
+        /* 1. Asegúrate de que el nombre del archivo sea exacto (ej. fondo.JPG vs fondo.jpg) */
+        background-image: 
+            linear-gradient(rgba(0, 174, 239, 0.45) 0%, rgba(0, 174, 239, 0.25) 100%), 
+            url('/fondo.jpg'); 
+        
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        /* Esto duplica el brillo para que resalte más */
+        filter: brightness(1.1); 
+    }
+
+    .spacer {
+        height: 450px; 
+        background: transparent;
+    }
+
+    .spacer-mini {
+        height: 80px; /* Altura del Navbar aproximadamente */
+    }
 </style>
